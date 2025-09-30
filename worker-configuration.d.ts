@@ -3,14 +3,14 @@
 // Runtime types generated with workerd@1.20250709.0 2025-03-10 nodejs_compat
 declare namespace Cloudflare {
 	interface Env {
-		OAUTH_KV: KVNamespace;
-		GITHUB_CLIENT_ID: string;
-		GITHUB_CLIENT_SECRET: string;
-		COOKIE_ENCRYPTION_KEY: string;
+		// OAUTH_KV: KVNamespace;
+		// GITHUB_CLIENT_ID: string;
+		// GITHUB_CLIENT_SECRET: string;
+		// COOKIE_ENCRYPTION_KEY: string;
 		DATABASE_URL: string;
-		PERPLEXITY_API_KEY: string;
-		ANTHROPIC_API_KEY: string;
-		SENTRY_DSN: string;
+		// PERPLEXITY_API_KEY: string;
+		// ANTHROPIC_API_KEY: string;
+		// SENTRY_DSN: string;
 		NODE_ENV: string;
 		MCP_OBJECT: DurableObjectNamespace<import("./src/index").MyMCP>;
 		AI: Ai;

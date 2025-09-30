@@ -5,9 +5,11 @@ import { registerDatabaseTools } from "./database-tools";
 /**
  * Register all MCP tools based on user permissions
  */
-export function registerAllTools(server: McpServer, env: Env, props: Props) {
+// let Pops is empty 
+// if props is not provided, it is empty
+export function registerAllTools(server: McpServer, env: Env) {
 	// Register database tools
-	registerDatabaseTools(server, env, props);
+	registerDatabaseTools(server, env);
 	
 	// Future tools can be registered here
 	// registerOtherTools(server, env, props);

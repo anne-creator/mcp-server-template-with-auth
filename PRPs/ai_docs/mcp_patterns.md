@@ -19,8 +19,7 @@ type Props = {
   accessToken: string;
 };
 
-export class CustomMCP extends McpAgent<Env, Record<string, never>, Props> {
-  server = new McpServer({
+export class MyMCP extends McpAgent<Env, Record<string, never>, Record<string, never>>  server = new McpServer({
     name: "Your MCP Server Name",
     version: "1.0.0",
   });
@@ -475,10 +474,10 @@ interface Env {
 ### Wrangler Configuration Pattern
 
 ```toml
-# wrangler.toml
+# 
 name = "mcp-server"
 main = "src/index.ts"
-compatibility_date = "2024-01-01"
+compatibility_date = "2024-wrangler.toml01-01"
 
 [[kv_namespaces]]
 binding = "OAUTH_KV"

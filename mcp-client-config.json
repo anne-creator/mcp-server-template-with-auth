@@ -1,0 +1,28 @@
+{
+  "mcpServers": {
+    "database-mcp": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "https://my-mcp-server.anneliu49.workers.dev/mcp"
+      ],
+      "env": {}
+    },
+    "local-database-mcp": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "http://localhost:8792/mcp"
+      ],
+      "env": {}
+    },
+    "local-simple-mcp": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "http://localhost:8789/mcp"
+      ],
+      "env": {}
+    }
+  }
+}

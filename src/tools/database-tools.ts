@@ -1,6 +1,5 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { 
-	Props, 
 	ListTablesSchema, 
 	QueryDatabaseSchema, 
 	ExecuteDatabaseSchema,
@@ -16,7 +15,7 @@ const ALLOWED_USERNAMES = new Set<string>([
 	'coleam00'
 ]);
 
-export function registerDatabaseTools(server: McpServer, env: Env, props: Props) {
+export function registerDatabaseTools(server: McpServer, env: Env) {
 	// Tool 1: List Tables - Available to all authenticated users
 	server.tool(
 		"listTables",
@@ -117,39 +116,37 @@ export function registerDatabaseTools(server: McpServer, env: Env, props: Props)
 	);
 
 	// Tool 3: Execute Database - Only available to privileged users (write operations)
-	if (ALLOWED_USERNAMES.has(props.login)) {
-		server.tool(
-			"executeDatabase",
-			"Execute any SQL statement against the PostgreSQL database, including INSERT, UPDATE, DELETE, and DDL operations. This tool is restricted to specific GitHub users and can perform write transactions. **USE WITH CAUTION** - this can modify or delete data.",
-			ExecuteDatabaseSchema,
-			async ({ sql }) => {
-				try {
-					// Validate the SQL query
-					const validation = validateSqlQuery(sql);
-					if (!validation.isValid) {
-						return createErrorResponse(`Invalid SQL statement: ${validation.error}`);
-					}
-					
-					return await withDatabase((env as any).DATABASE_URL, async (db) => {
-						const results = await db.unsafe(sql);
-						
-						const isWrite = isWriteOperation(sql);
-						const operationType = isWrite ? "Write Operation" : "Read Operation";
-						
-						return {
-							content: [
-								{
-									type: "text",
-									text: `**${operationType} Executed Successfully**\n\`\`\`sql\n${sql}\n\`\`\`\n\n**Results:**\n\`\`\`json\n${JSON.stringify(results, null, 2)}\n\`\`\`\n\n${isWrite ? '**⚠️ Database was modified**' : `**Rows returned:** ${Array.isArray(results) ? results.length : 1}`}\n\n**Executed by:** ${props.login} (${props.name})`
-								}
-							]
-						};
-					});
-				} catch (error) {
-					console.error('executeDatabase error:', error);
-					return createErrorResponse(`Database execution error: ${formatDatabaseError(error)}`);
+	server.tool(
+		"executeDatabase",
+		"Execute any SQL statement against the PostgreSQL database, including INSERT, UPDATE, DELETE, and DDL operations. This tool is restricted to specific GitHub users and can perform write transactions. **USE WITH CAUTION** - this can modify or delete data.",
+		ExecuteDatabaseSchema,
+		async ({ sql }) => {
+			try {
+				// Validate the SQL query
+				const validation = validateSqlQuery(sql);
+				if (!validation.isValid) {
+					return createErrorResponse(`Invalid SQL statement: ${validation.error}`);
 				}
+				
+				return await withDatabase((env as any).DATABASE_URL, async (db) => {
+					const results = await db.unsafe(sql);
+					
+					const isWrite = isWriteOperation(sql);
+					const operationType = isWrite ? "Write Operation" : "Read Operation";
+					
+					return {
+						content: [
+							{
+								type: "text",
+								text: `**${operationType} Executed Successfully**\n\`\`\`sql\n${sql}\n\`\`\`\n\n**Results:**\n\`\`\`json\n${JSON.stringify(results, null, 2)}\n\`\`\`\n\n${isWrite ? '**⚠️ Database was modified**' : `**Rows returned:** ${Array.isArray(results) ? results.length : 1}`}\n\n)`
+							}
+						]
+					};
+				});
+			} catch (error) {
+				console.error('executeDatabase error:', error);
+				return createErrorResponse(`Database execution error: ${formatDatabaseError(error)}`);
 			}
-		);
-	}
+		}
+	);
 }
